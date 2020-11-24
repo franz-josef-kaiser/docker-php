@@ -1,4 +1,4 @@
-FROM php:7.4-cli
+FROM php:7.4-fpm
 
 # Set TERM to suppress warning messages.
 ENV TERM=xterm-256color
@@ -14,14 +14,14 @@ RUN apt-get update \
     && apt-get install -y \
         apt-utils \
         curl \
-        mariadb-client \
         git \
-        openssh-client \
-        unzip \
-        wget \
-        curl \
-        vim \
         htop \
+        mariadb-client \
+        openssh-client \
+        procps \
+        unzip \
+        vim \
+        wget \
         build-essential --no-install-recommends \
     && apt-get clean -y
 
@@ -122,7 +122,7 @@ RUN apt-get update \
 RUN docker-php-source extract \
     && php-config --extension-dir \
     && pecl config-set php_ini $(php-config --ini-dir) \
-    && pecl install igbinary \
+    && pecl install igbinary-3.1.6 \
     && docker-php-ext-enable igbinary \
     && docker-php-source delete \
     && echo "session.serialize_handler=igbinary" > "$(php-config --ini-dir)/docker-php-ext-igbinary.ini" \
@@ -156,8 +156,10 @@ RUN apt-get purge --auto-remove -y $buildDeps \
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 RUN echo -n "\n ------------\n PHP installed using to following configuration:\n ------------\n" \
-    && php-config --configure-options | tr " " "\n"
+    && php-config --configure-options | tr " " "\n" \
+    && echo -n "\n ------------\n PHP FPM configuration:\n ------------\n" \
+    && php-fpm -tt
 
 WORKDIR /usr/src/xmlsitemap
 
-CMD [ "php", "run.php" ]
+CMD [ "php-fpm", "-F", "-R" ]
