@@ -1,0 +1,9 @@
+name: XML Sitemap
+type: module
+description: 'Creates an XML sitemap conforming to the <a href="http://sitemaps.org/">sitemaps.org protocol</a>.'
+package: 'XML Sitemap'
+core_version_requirement: ^8.8 || ^9
+configure: xmlsitemap.admin_search
+test_dependencies:
+  - metatag:metatag
+  - robotstxt:robotstxt
