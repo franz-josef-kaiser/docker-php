@@ -1,3 +1,5 @@
 .idea/
-# src/vendor/*
-# src/vendor/**
+conf/**
+!conf/.gitkeep
+src/vendor/*
+src/vendor/**
